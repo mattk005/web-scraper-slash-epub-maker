@@ -33,3 +33,13 @@ in them, so hopefully I can just grab a template fill it up and call it a day.
 webscraper is working and looks pretty. Currently it writes the title and body
 to a file in chapters/ next is the hard part: finding a decent template for an
 EPUB. I'll deal with looping scraper once I have an XHTML template for the chapters.
+
+## Update 2
+
+I ended up scraping and storing all of the chapters in chapters/html/ (ignored
+in .gitignore) I've decided I'm going to be using EbookLib. I'll eventually make
+the scraper look nice but for now I want to see if I can get this into a format
+that e-readers like.
+
+The pivot to EbookLib is a little disappointing but I'm pretty sure that EPUBs
+are going to be far more strict and pedantic than I had originally expected.
