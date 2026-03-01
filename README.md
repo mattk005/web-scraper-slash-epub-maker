@@ -43,3 +43,11 @@ that e-readers like.
 
 The pivot to EbookLib is a little disappointing but I'm pretty sure that EPUBs
 are going to be far more strict and pedantic than I had originally expected.
+
+## Update 3
+
+Everything seems to be working, I just need to refactor it all because it's
+ugly. My actual workflow was to scrape all the pages I wanted. Then convert it
+from my saved .html files in my folder. I'm not sure if I want the final project
+to look like that. Originally I wanted it to do everything in memory, but I
+didn't want to blast the website with requests every time I made a change.
