@@ -1,5 +1,5 @@
 .venv/
 /chapters
-/__pycashe__
+/__pycache__
 /epub
 .env
