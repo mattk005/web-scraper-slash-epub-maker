@@ -2,9 +2,9 @@ import re
 
 
 class Chapter:
-    def __init__(self, title: str, paragraphs: str) -> None:
+    def __init__(self, title: str, content: str) -> None:
         self.title = title.text
-        self.paragraphs = paragraphs
+        self.content = content
 
     def get_sanitized_title(self):
         title_string = self.title
@@ -12,4 +12,4 @@ class Chapter:
         return debug_me
 
     def __str__(self):
-        return f"{self.title}\n {self.paragraphs}"
+        return f"{self.title}\n {self.content}"

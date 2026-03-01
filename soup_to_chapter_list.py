@@ -22,5 +22,5 @@ def get_chapter_objects(list_of_soup):
     for soup in list_of_soup:
         title = get_title(soup)
         paragraphs = get_paragraphs(soup)
-        chapter_objects.append(Chapter(title=title, paragraphs=paragraphs))
+        chapter_objects.append(Chapter(title=title, content=paragraphs))
     return chapter_objects

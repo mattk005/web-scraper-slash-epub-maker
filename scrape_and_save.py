@@ -83,7 +83,7 @@ def scrape_and_save(url):
     soup = for_testing()
     title = get_title(soup)
     body = get_paragraphs(soup)
-    chapter_object = Chapter(title=title.text.strip(), paragraphs=body)
+    chapter_object = Chapter(title=title.text.strip(), content=body)
     # write_out(title, body)
     next_url = get_next_url(soup)
     return next_url, chapter_object

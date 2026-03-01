@@ -2,7 +2,6 @@ from ebooklib import epub
 from dotenv import load_dotenv
 import os
 import io
-from spaghetti import test_object
 
 
 def make_book(chapter_objects, TITLE, AUTHOR, ID, COVER=None):
@@ -40,7 +39,7 @@ def set_chapter(ch, book):
         file_name=f"{ch.get_sanitized_title()}.xhtml",
         lang="en",
     )
-    c1.set_content(f"<html><body><h1>{ch.title}</h1>{ch.paragraphs}</body></html>")
+    c1.set_content(f"<html><body><h1>{ch.title}</h1>{ch.content}</body></html>")
     book.add_item(c1)
     return c1
 
