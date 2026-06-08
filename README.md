@@ -2,15 +2,25 @@
 
 ---
 
-The plan for this project is to scrape a certain webpage for a web novel I'm
-interested in reading, then convert it's contents to some format my kindle
-paperwhite will like (an EPUB). I already had a webscraper that Gemini put
-together in like 10 seconds but we're doing this form scratch for a learning
-experience (the webscraper part isn't that complicated, it does have to be
-tailored for the content we're scraping)
+- A webscraper for collecting web fiction and generating an ePub for reading
+  offline (ie. on a Kindle/Boox tablet etc.)
+- retains the structure of the web page (Chapter order), can scrape either the
+  novel index or start from chapter 1 and follow the "next chapter" buttons
+  (scrape.py and scrape2.py)
+- requirements.txt is included but this is mostly just beautiful soup 4,
+  dotenv, requests and ebooklib.
 
-The scraper is being built for a
-WordPress site so the body mostly looks like this:
+---
+
+This worked for the one book I wanted from the one site I was looking at.
+I've since begun re-writing this project in golang for the next book I'm looking
+at
+
+---
+
+Chapter data is found by finding the containing div, then typically using the `<hr>`
+tag at the end of the chapter.
+some example HTML:
 
 ```HMTL
 <div class="entry-content wp-block-post-content is-layout-constrained wp-block-post-content-is-layout-constrained">
@@ -20,34 +30,51 @@ WordPress site so the body mostly looks like this:
 <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide" />
 ```
 
-^^ the gist of it is that we're using the div to have the start of the content
-we're interested in and then the horizontal rule as a mark to the end of the
-content, then `return soup.find("a", string="Next Chapter").get("href")` will
-give us the URL for the next chapter.
+Uses beautiful soup to find the top and bottom of the chapter text and collects
+the `<p>` tags, retains nested tags (ePub format uses XHTML tags anyway), strips
+the css tags.
 
-From what I've seen EPUB files are just a zip folder with a pile of .xhtml files
-in them, so hopefully I can just grab a template fill it up and call it a day.
+```
+    block = soup.find("div", class_="entry-content")
+    paragraphs = block.find_all(["p", "hr", "ol", "blockquote", "pre", "ul"])
+    for p in paragraphs:
+        if p.name == "hr" and "wp-block-separator" in p.get("class", []):
+            break
+        else:
+            del p["class"]
+            clean_paragraphs.append(str(p))
+```
 
-## Update 1
+Most of the other information such as URL and series Title/Author are hidden in
+a .env. URL was the URL to chapter 1. URL2 was the URL to the series index. The
+rest of the ePub creation was more manual than I would have liked.
 
-webscraper is working and looks pretty. Currently it writes the title and body
-to a file in chapters/ next is the hard part: finding a decent template for an
-EPUB. I'll deal with looping scraper once I have an XHTML template for the chapters.
+```
+def main():
+    load_dotenv()
+    TITLE = os.getenv("TITLE")
+    AUTHOR = os.getenv("AUTHOR")
+    ID = os.getenv("ID")
+    COVER = os.getenv("COVER")
+```
 
-## Update 2
+As mentioned above, scrape.py would find the next button to traverse the chapters.
 
-I ended up scraping and storing all of the chapters in chapters/html/ (ignored
-in .gitignore) I've decided I'm going to be using EbookLib. I'll eventually make
-the scraper look nice but for now I want to see if I can get this into a format
-that e-readers like.
+```
+    return soup.find("a", string=lambda t: t and "Next Chapter" in t).get("href")
+```
 
-The pivot to EbookLib is a little disappointing but I'm pretty sure that EPUBs
-are going to be far more strict and pedantic than I had originally expected.
+scrape2.py just uses a div full of links to the chapters and preserves the order.
 
-## Update 3
-
-Everything seems to be working, I just need to refactor it all because it's
-ugly. My actual workflow was to scrape all the pages I wanted. Then convert it
-from my saved .html files in my folder. I'm not sure if I want the final project
-to look like that. Originally I wanted it to do everything in memory, but I
-didn't want to blast the website with requests every time I made a change.
+```
+def get_links(soup):
+    links = []
+    div = soup.find(
+        "div",
+        class_="wp-block-group is-layout-grid wp-container-core-group-is-layout-7d05cc0d wp-block-group-is-layout-grid",
+    )
+    for href in div.find_all("a", class_="wp-block-latest-posts__post-title"):
+        link = href.get("href")
+        links.append(link)
+    return links
+```

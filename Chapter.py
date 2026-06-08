@@ -3,7 +3,7 @@ import re
 
 class Chapter:
     def __init__(self, title: str, content: str) -> None:
-        self.title = title.text
+        self.title = title
         self.content = content
 
     def get_sanitized_title(self):

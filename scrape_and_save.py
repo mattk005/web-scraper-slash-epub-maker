@@ -1,6 +1,5 @@
 import bs4
 import requests
-import time
 import os
 from Chapter import Chapter
 from pathlib import Path
@@ -94,10 +93,3 @@ if __name__ == "__main__":
     url = os.getenv("URL")
     scrape_and_save(url)
     my_set = set()
-
-    # i = 1
-    # while url not in my_set:
-    #     my_set.add(url)
-    #     url = scrape_and_save(url, i)
-    #     i += 1
-    #     time.sleep(2)

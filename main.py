@@ -5,6 +5,8 @@ from ebooklib import epub
 import os
 import io
 
+from scrape2 import main as scrape2
+
 
 def main():
     load_dotenv()
@@ -13,8 +15,9 @@ def main():
     ID = os.getenv("ID")
     COVER = os.getenv("COVER")
 
-    soup_list = get_soup_list()
-    chapter_objects = get_chapter_objects(soup_list)
+    # soup_list = get_soup_list()
+    # chapter_objects = get_chapter_objects(soup_list)
+    chapter_objects = scrape2()
     book = make_book(
         chapter_objects=chapter_objects, TITLE=TITLE, AUTHOR=AUTHOR, ID=ID, COVER=COVER
     )
